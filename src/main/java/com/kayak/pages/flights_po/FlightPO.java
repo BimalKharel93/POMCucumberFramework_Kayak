@@ -1,4 +1,4 @@
-package src.main.java.com.kayak.flights_po;
+package src.main.java.com.kayak.pages.flights_po;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -7,7 +7,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import src.main.java.com.kayak.utilities.ApplicationHooks;
+import src.main.java.com.kayak.factory.DriverManager;
+import src.main.java.com.kayak.utilities.BrowserUtilities;
+import src.main.java.com.kayak.utilities.CommonUtilities;
+import src.main.java.com.kayak.utilities.ConfigPages;
+import src.main.java.com.kayak.utilities.SeleniumUtilities;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -15,15 +19,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FlightPO extends ApplicationHooks {
+public class FlightPO extends ConfigPages {
     Robot robot = new Robot();
+    public WebDriver driver;
+    private  BrowserUtilities oBroUti = new BrowserUtilities();
+    private SeleniumUtilities oSeUtil = new SeleniumUtilities();
+
 
     public FlightPO(WebDriver driver) throws AWTException {
-        ApplicationHooks.driver = driver;
+        this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
-    Actions actions = new Actions(driver);
+    Actions actions = new Actions(DriverManager.getDriver());
 
     @FindBy(xpath = "//div[contains(text(),'Flights')]")
     WebElement eFlightPageLink;
@@ -67,11 +75,20 @@ public class FlightPO extends ApplicationHooks {
     @FindBy(xpath = "//div[@data-name='airports-section']")
     WebElement eAirportSection;
 
-    @FindBy(xpath = "//div[@class='inner-grid keel-grid']//ol[@class='flights']")
+    @FindBy(xpath = "//div[@class='inner-grid keel-grid']//div[@class='mainInfo']")
     List<WebElement> resultsTabs;
 
-    @FindBy(xpath = "//li[@class='sign-up-in admin']/ancestor::div[3]/div[1]//input")
-    WebElement eFromTxtBox;
+    @FindBy(xpath = "//div[@class='Base-Results-ResultsListHeader Flights-Results-FlightResultsListHeader']")
+    WebElement resultSortBox;
+
+    @FindBy(xpath = "//div[contains(@class,'-departure-row')]//div[contains(@class,'location-block')]/span")
+    List<WebElement> departureRows;
+
+    @FindBy(xpath = "//div[contains(@class,'-arrival-row')]//div[contains(@class,'location-block')]/span")
+    List<WebElement> arrivalRows;
+
+    @FindBy(xpath = "//div[contains(@id,'-destination') and contains(@id,'destination-input-wrapper')]")
+    WebElement toWarperBox;
 
     // dynamic date picker for departure
     public WebElement departureDay(String sendDate) throws InterruptedException {
@@ -166,8 +183,8 @@ public class FlightPO extends ApplicationHooks {
     }
 
     public void selectNearByAirportsSuggestionDestinationCity() throws Exception {
-        oBroUti.waitForElementToBeVisible(driver, eDestTab, 15);
-        oBroUti.ufClick(eDestTab);
+        oBroUti.waitForElementToBeVisible(driver, eDestinationCity, 15);
+        oBroUti.ufClick(eDestinationCity);
 
         Thread.sleep(5000);
         WebElement eNearByElement = oSeUtil.getElementByContainsTxt(eDestDrpDownAirports, "nearby");
@@ -195,8 +212,9 @@ public class FlightPO extends ApplicationHooks {
 
     public void closeAnyHtmlPopUp() throws Exception {
         Thread.sleep(7000);
-        oBroUti.waitForElementToBeVisible(driver, htmlPopUP, 15);
+
         try {
+            oBroUti.waitForElementToBeVisible(driver, htmlPopUP, 15);
             oBroUti.ufClick(htmlPopUP);
         } catch (NoSuchElementException nse) {
 
@@ -207,8 +225,8 @@ public class FlightPO extends ApplicationHooks {
         oBroUti.waitForElementToBeVisible(driver, eAirportSection, 20);
         oBroUti.scrollToView(driver, eAirportSection);
 
-        WebElement forShowOnly = eOriginAirportsNames(sOriginAirport).get(0);
-        oBroUti.scrollToView(driver,forShowOnly);
+//        WebElement forShowOnly = eOriginAirportsNames(sOriginAirport).get(0);
+//        oBroUti.scrollToView(driver,forShowOnly);
 
         HashMap<WebElement,WebElement> originAirportMap = new HashMap<>();
         for (int i = 0; i < eOriginAirportsNames(sOriginAirport).size(); i++) {
@@ -245,8 +263,8 @@ public class FlightPO extends ApplicationHooks {
 //            oBroUti.ufClick(wes.getValue());
 //        }
 
-        WebElement forShowOnly = eDestinationAirportName(sDestinationAirport).get(0);
-        oBroUti.scrollToView(driver,forShowOnly);
+//        WebElement forShowOnly = eDestinationAirportName(sDestinationAirport).get(0);
+//        oBroUti.scrollToView(driver,forShowOnly);
 
         for (Map.Entry<WebElement, WebElement> wes : destinationAirportMap.entrySet()) {
             if (wes.getKey().getText().contains(sDestinationAirport)) {
@@ -256,29 +274,42 @@ public class FlightPO extends ApplicationHooks {
         }
     }
 
-    public String verifyResultsByOriginAirportsNames(String sOriginAirport) throws InterruptedException {
-        oBroUti.scrollToView(driver, eFightPage);
-        WebElement firstTab = resultsTabs.get(0);
-        oBroUti.scrollToView(driver,firstTab);
-        actions.moveToElement(firstTab).click().build().perform();
+    public String verifyResultsByOriginAirportsNames(String sOriginAirport) throws Exception {
+        oBroUti.waitForElementToBeVisible(driver,resultSortBox,10);
+        oBroUti.scrollToView(driver,resultSortBox);
+        Thread.sleep(5000);
+        for (int i = 0; i < resultsTabs.size(); i++) {
+            WebElement firstTab = resultsTabs.get(i);
+            oBroUti.scrollToView(driver,firstTab);
+            actions.moveToElement(firstTab).click().build().perform();
+            break;
+        }
+
 
         Thread.sleep(7000);
-        WebElement firstOrAirport = result_OriginAirports(sOriginAirport).get(0);
-
-        oBroUti.scrollToView(driver,firstOrAirport);
-        String expectedName = firstOrAirport.getText();
+        String expectedName = "";
+        for (int i = 0; i < departureRows.size(); i++) {
+            Thread.sleep(3000);
+            expectedName = departureRows.get(i).getText();
+            System.out.println(expectedName);
+            if(expectedName.contains(sOriginAirport))
+            break;
+        }
         return expectedName;
     }
 
-    public String verifyResultsByDestAirportNames(String sDestAirport) {
-        WebElement firstDestAirport = result_DestAirports(sDestAirport).get(0);
-        oBroUti.scrollToView(driver,firstDestAirport);
-
-        String expectedName = firstDestAirport.getText();
+    public String verifyResultsByDestAirportNames(String sDestAirport) throws InterruptedException {
+        String expectedName = "";
+        for (int i = 0; i < arrivalRows.size(); i++) {
+            Thread.sleep(3000);
+            expectedName = arrivalRows.get(i).getText();
+            System.out.println(expectedName);
+            if(expectedName.contains(sDestAirport))
+            break;
+        }
         return expectedName;
 
     }
-
     public void refreshDom() throws InterruptedException{
         Thread.sleep(9000);
         oSeUtil.refreshPage(driver);

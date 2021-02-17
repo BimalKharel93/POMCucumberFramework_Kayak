@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.Wait;
 import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
 import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
+import src.main.java.com.kayak.factory.DriverManager;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -19,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public class BrowserUtilities {
+    private DriverManager driverManager = new DriverManager();
+
     /*
     @Author: Bimal Kharel
     @Application: Kayak
@@ -113,7 +116,7 @@ public class BrowserUtilities {
     }
 
     public void clickUsingJs(WebElement ele) {
-        JavascriptExecutor executor = (JavascriptExecutor) ApplicationHooks.driver;
+        JavascriptExecutor executor = (JavascriptExecutor)driverManager.getDriver();
         executor.executeScript("argument[0].click();", ele);
     }
 

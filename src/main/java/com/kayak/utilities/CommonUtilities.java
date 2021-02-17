@@ -13,6 +13,7 @@ import org.openqa.selenium.interactions.Actions;
 import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
 import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
+import src.main.java.com.kayak.factory.DriverManager;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -36,7 +37,8 @@ import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 public class CommonUtilities {
-    public static ApplicationHooks oTest = new ApplicationHooks();
+    private DriverManager driverManager = new DriverManager();
+    public static TestBase oTest = new TestBase();
     Logger log = Logger.getLogger(getClass().getSimpleName());
     static Properties props = new Properties();
     static FileInputStream fileIn = null;
@@ -60,7 +62,7 @@ public class CommonUtilities {
             throw new Exception(strException);
     }
 
-    public static String takeScreenShotWebReturnPath(WebDriver driver, String className) throws IOException {
+    public String takeScreenShotWebReturnPath(WebDriver driver, String className) throws IOException {
         String sDestDir = "\\screenshots";
         String sImageName = System.getProperty("user.dir") + sDestDir + className + ".jpg";
         Screenshot screenshot = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1000)).takeScreenshot(driver);
@@ -230,7 +232,7 @@ public class CommonUtilities {
     }
 
     public void moveToElement(WebElement element) throws Exception {
-        Actions act = new Actions(ApplicationHooks.driver);
+        Actions act = new Actions(driverManager.getDriver());
         act.moveToElement(element);
         act.build().perform();
 
