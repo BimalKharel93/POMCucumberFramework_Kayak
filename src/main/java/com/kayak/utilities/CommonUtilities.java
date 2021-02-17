@@ -38,7 +38,6 @@ import java.util.*;
 
 public class CommonUtilities {
     private DriverManager driverManager = new DriverManager();
-    public static TestBase oTest = new TestBase();
     Logger log = Logger.getLogger(getClass().getSimpleName());
     static Properties props = new Properties();
     static FileInputStream fileIn = null;
