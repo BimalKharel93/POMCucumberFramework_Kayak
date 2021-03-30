@@ -21,6 +21,6 @@ public class ConfigPages {
     public static String sScreenShotName;
     public static String sClassNameForScreenShot;
     public static String sErrorMessage = "";
-    //git exaplme 
+    //git explain
 
 }
