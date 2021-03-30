@@ -225,21 +225,11 @@ public class FlightPO extends ConfigPages {
         oBroUti.waitForElementToBeVisible(driver, eAirportSection, 20);
         oBroUti.scrollToView(driver, eAirportSection);
 
-//        WebElement forShowOnly = eOriginAirportsNames(sOriginAirport).get(0);
-//        oBroUti.scrollToView(driver,forShowOnly);
-
         HashMap<WebElement,WebElement> originAirportMap = new HashMap<>();
         for (int i = 0; i < eOriginAirportsNames(sOriginAirport).size(); i++) {
             originAirportMap.put(eOriginAirportsNames(sOriginAirport).get(i),eCheckBoxOfOriginAirports(sOriginAirport).get(i));
             oBroUti.ufClick(eCheckBoxOfDestinationAirports(sOriginAirport).get(i));
         }
-
-//        HashMap<WebElement, WebElement> originAirportMap = oSeUtil.pairOfElements(eOriginAirportsNames(sOriginAirport), eCheckBoxOfOriginAirports(sOriginAirport));
-//        Thread.sleep(5000);
-//        for (Map.Entry<WebElement, WebElement> we : originAirportMap.entrySet()) {
-//            Thread.sleep(2000);
-//            oBroUti.ufClick(we.getValue());
-//        }
 
         for (Map.Entry<WebElement, WebElement> we : originAirportMap.entrySet()) {
             if (we.getKey().getText().contains(sOriginAirport)) {
@@ -255,16 +245,6 @@ public class FlightPO extends ConfigPages {
             destinationAirportMap.put(eDestinationAirportName(sDestinationAirport).get(i),eCheckBoxOfDestinationAirports(sDestinationAirport).get(i));
             oBroUti.ufClick(eCheckBoxOfDestinationAirports(sDestinationAirport).get(i));
         }
-
-//        HashMap<WebElement, WebElement> destinationAirportMap = oSeUtil.pairOfElements(eDestinationAirportName(sDestinationAirport), eCheckBoxOfDestinationAirports(sDestinationAirport));
-//        Thread.sleep(5000);
-//        for (Map.Entry<WebElement, WebElement> wes : destinationAirportMap.entrySet()) {
-//            Thread.sleep(2000);
-//            oBroUti.ufClick(wes.getValue());
-//        }
-
-//        WebElement forShowOnly = eDestinationAirportName(sDestinationAirport).get(0);
-//        oBroUti.scrollToView(driver,forShowOnly);
 
         for (Map.Entry<WebElement, WebElement> wes : destinationAirportMap.entrySet()) {
             if (wes.getKey().getText().contains(sDestinationAirport)) {
@@ -284,7 +264,6 @@ public class FlightPO extends ConfigPages {
             actions.moveToElement(firstTab).click().build().perform();
             break;
         }
-
 
         Thread.sleep(7000);
         String expectedName = "";

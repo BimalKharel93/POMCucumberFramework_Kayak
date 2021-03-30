@@ -3,15 +3,12 @@ package src.test.java.com.kayak.stepdefs;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import src.main.java.com.kayak.factory.DriverManager;
 import src.main.java.com.kayak.pages.flights_po.FlightPO;
 import src.main.java.com.kayak.utilities.ConfigPages;
 
 import java.awt.*;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class FlightSearchSteps extends ConfigPages{
@@ -25,7 +22,6 @@ public class FlightSearchSteps extends ConfigPages{
         sErrorMessage = "";
         sClassNameForScreenShot = getClass().getSimpleName();
         DriverManager.getDriver().get(oCons.getKayakUrl());
-        System.out.println("open browser");
     }
 
     @Given("name of the cities and dates")
